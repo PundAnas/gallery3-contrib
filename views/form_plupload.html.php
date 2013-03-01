@@ -2,8 +2,6 @@
 <script type="text/javascript" src="<?= url::file("modules/plupload/lib/plupload.js") ?>"></script>
 <script type="text/javascript" src="<?= url::file("modules/plupload/lib/plupload.flash.js") ?>"></script>
 <script type="text/javascript" src="<?= url::file("modules/plupload/lib/plupload.html5.js") ?>"></script>
-<script type="text/javascript" src="<?= url::file("modules/plupload/lib/jquery.ui.plupload/jquery.ui.plupload_clear.js") ?>"></script>
-<script type="text/javascript" src="<?= url::file("modules/plupload/lib/jquery.ui.plupload/jquery.debug.js") ?>"></script>
 <script type="text/javascript">
 // Convert divs to queue widgets when the DOM is ready
 $("#g-add-photos-canvas").ready($(function() {
@@ -58,15 +56,13 @@ $("#g-add-photos-canvas").ready($(function() {
     }
   }
  
-  // If using g-plupload $("#g-plupload").plupload('getUploader') return nothing (uploader doesn't exist yet)
-  //$("#g-plupload").plupload({
   uploader = new plupload.Uploader({
     // General settings
     runtimes : 'html5,flash',
     url : "<?= url::site("uploader/add_photo/{$album->id}") ?>",
     max_file_size : <?= $size_limit_bytes ?>,
     max_file_count: <?= $simultaneous_upload_limit ?>, // user can add no more then 20 files at a time
-    chunk_size : '1mb',
+    //chunk_size : '1mb',
     unique_names : true,
     multiple_queues : true,
     browse_button : 'g-add-photos-button',
@@ -75,7 +71,7 @@ $("#g-add-photos-canvas").ready($(function() {
     multipart_params : <?= json_encode($script_data) ?>,
 
     // Resize images on clientside if we can
-    resize : {width : 320, height : 240, quality : 90},
+    resize : {width : <?= $resize_size ?>, height : <?= $resize_size ?>, quality : 90},
     
     // Rename files by clicking on their titles
     rename: true,
@@ -86,10 +82,11 @@ $("#g-add-photos-canvas").ready($(function() {
     // Specify what files to browse for
     filters : [
       {title : "Image files", extensions : "jpg,JPG,jpeg,JPEG,gif,GIF,png,PNG"},
+      {title : "Movie files", extensions : "flv,FLV,mp4,MP4,m4v,M4V"},
     ],
 
     // Flash settings
-    flash_swf_url : '../../js/plupload.flash.swf',
+    flash_swf_url : 'modules/plupload/lib/plupload.flash.swf',
     onError: function(event, queueID, fileObj, errorObj) {
       if (errorObj.type == "HTTP") {
         if (errorObj.info == "500") {
@@ -162,7 +159,6 @@ $("#g-add-photos-canvas").ready($(function() {
         .addClass("ui-state-disabled")
         .attr("disabled", "disabled");
     }      
-    e.preventDefault();
     up.refresh(); // Reposition Flash/Silverlight
   });
 
