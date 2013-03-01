@@ -35,7 +35,7 @@ class Uploader_Controller extends Controller {
   }
 
   public function add_photo($id) {
-    /*$album = ORM::factory("item", $id);
+    $album = ORM::factory("item", $id);
     access::required("view", $album);
     access::required("add", $album);
     access::verify_csrf();
@@ -48,13 +48,13 @@ class Uploader_Controller extends Controller {
     $form = $this->_get_add_form($album);
 
     // Uploadify adds its own field to the form, so validate that separately.
-    $file_validation = new Validation($_FILES);
+    /*$file_validation = new Validation($_FILES);
     $file_validation->add_rules(
       "Filedata", "upload::valid",  "upload::required",
-      "upload::type[" . implode(",", legal_file::get_extensions()) . "]");
+      "upload::type[" . implode(",", legal_file::get_extensions()) . "]");*/
 
-    if ($form->validate() && $file_validation->validate()) {
-      $temp_filename = upload::save("Filedata");
+    if ($form->validate()) {
+      $temp_filename = upload::save("file");
       Event::add("system.shutdown", create_function("", "unlink(\"$temp_filename\");"));
       try {
         $item = ORM::factory("item");
@@ -100,7 +100,7 @@ class Uploader_Controller extends Controller {
     } else {
       header("HTTP/1.1 400 Bad Request");
       print "ERROR: " . t("Invalid upload");
-    }*/
+    }
   }
 
   public function status($success_count, $error_count) {
@@ -130,7 +130,7 @@ class Uploader_Controller extends Controller {
     $group->plupload("plupload")->album($album);
 
     $group = $form->group("actions");
-    $group->uploadify_buttons("");
+    //$group->plupload_buttons("");
 
     module::event("add_photos_form", $album, $form);
 
