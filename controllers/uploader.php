@@ -125,8 +125,7 @@ class Uploader_Controller extends Controller {
     $form = new Forge("uploader/finish", "", "post", array("id" => "g-add-photos-form"));
     $group = $form->group("add_photos")
       ->label(t("Add photos to %album_title", array("album_title" => html::purify($album->title))));
-//    message::success(t("Coucou Plupload %group", array("group" => $group)));    
-    //var_dump($group);
+
     $group->plupload("plupload")->album($album);
 
     $group = $form->group("actions");

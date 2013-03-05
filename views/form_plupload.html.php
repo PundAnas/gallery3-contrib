@@ -211,6 +211,24 @@ $("#g-add-photos-canvas").ready($(function() {
 })
 );
 </script>
+<div>
+  <? if ($suhosin_session_encrypt || (identity::active_user()->admin && !$movies_allowed)): ?>
+  <div class="g-message-block g-info">
+    <? if ($suhosin_session_encrypt): ?>
+    <p class="g-error">
+      <?= t("Error: your server is configured to use the <a href=\"%encrypt_url\"><code>suhosin.session.encrypt</code></a> setting from <a href=\"%suhosin_url\">Suhosin</a>.  You must disable this setting to upload photos.",
+          array("encrypt_url" => "http://www.hardened-php.net/suhosin/configuration.html#suhosin.session.encrypt",
+      "suhosin_url" => "http://www.hardened-php.net/suhosin/")) ?>
+    </p>
+    <? endif ?>
+
+    <? if (identity::active_user()->admin && !$movies_allowed): ?>
+    <p class="g-warning">
+      <?= t("Can't find <i>ffmpeg</i> on your system. Movie uploading disabled. <a href=\"%help_url\">Help!</a>", array("help_url" => "http://codex.gallery2.org/Gallery3:FAQ#Why_does_it_say_I.27m_missing_ffmpeg.3F")) ?>
+    </p>
+    <? endif ?>
+  </div>
+  <? endif ?>
 
   <div>
     <ul class="g-breadcrumbs">
@@ -231,11 +249,13 @@ $("#g-add-photos-canvas").ready($(function() {
     </ul>
   </div>
  <!-- Proxy the done request back to our form, since its been ajaxified -->
-  <button id="g-upload-done" class="ui-state-default ui-corner-all" onclick="$('#g-add-photos-form').submit();return false;">
-  <?= t("Done") ?>
-  </button>
-  <button id="g-upload-cancel-all" class="ui-state-default ui-corner-all ui-state-disabled" disabled="disabled">
-  <?= t("Cancel uploads") ?>
-  </button>
-  <span id="g-add-photos-status-message" />
+  <div>
+    <button id="g-upload-done" class="ui-state-default ui-corner-all" onclick="$('#g-add-photos-form').submit();return false;">
+      <?= t("Done") ?>
+    </button>
+    <button id="g-upload-cancel-all" class="ui-state-default ui-corner-all ui-state-disabled" disabled="disabled">
+      <?= t("Cancel uploads") ?>
+    </button>
+    <span id="g-add-photos-status-message" />
+  </div>
 </div>
